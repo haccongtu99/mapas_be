@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  # # Node.js application
+  # app:
+  #   build: .
+  #   ports:
+  #     - '8080:8080'
+  #   depends_on:
+  #     - redis
+  #     - mongodb
+
+  # Redis
+  redis:
+    image: 'redis:latest'
+    container_name: redis_mapas_admin
+    ports:
+      - '6380:6379'
+
+  # MongoDB
+  mongodb:
+    image: 'mongo:latest'
+    container_name: mongodb_mapas_admin
+    ports:
+      - '5002:27017'
