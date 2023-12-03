@@ -4,6 +4,7 @@ import uploadRouter from '@/files/file.route'
 import productRouter from '@/products/product.route'
 import userRouter from '@/users/user.route'
 import projectRouter from '@/projects/project.route'
+import clientRouter from '@/clients/client.route'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express, { Application } from 'express'
@@ -36,6 +37,7 @@ app.use('/v1', uploadRouter)
 app.use('/v1', productRouter)
 app.use('/v1', productCategoryRouter)
 app.use('/v1', projectRouter)
+app.use('/v1', clientRouter)
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
