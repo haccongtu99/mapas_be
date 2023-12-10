@@ -3,10 +3,7 @@ import { IProject } from './project.interface'
 
 const ProjectSchema = new Schema(
   {
-    avatar: {
-      type: String,
-      trim: true
-    },
+    avatar: { url: { type: String, trim: true }, publicId: { type: String } },
     name: {
       type: String,
       required: true
@@ -19,12 +16,8 @@ const ProjectSchema = new Schema(
       type: String,
       required: true
     },
-    images: [
-      {
-        mainImage: [{ type: String }],
-        subImage: [{ type: String }]
-      }
-    ]
+    images: [{ url: { type: String }, publicId: { type: String } }],
+    layout: [[{ type: Number, default: undefined }]]
   },
   {
     collection: 'projects',

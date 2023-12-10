@@ -9,11 +9,7 @@ export const uploadController = {
         req.file?.path
       )
 
-      return res.json({
-        status: code,
-        data: data,
-        message: message
-      })
+      return res.json({ status: code, data, message })
     } catch (err) {
       next(InternalServerError)
     }
@@ -36,6 +32,16 @@ export const uploadController = {
         data: data,
         message: message
       })
+    } catch (err) {
+      next(InternalServerError)
+    }
+  },
+
+  deleteImages: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { ids } = req.body
+      const { code, message } = await uploadService.deleteMultiImages(ids)
+      return res.json({ status: code, message })
     } catch (err) {
       next(InternalServerError)
     }

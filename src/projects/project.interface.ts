@@ -1,17 +1,23 @@
 import { TPagination } from '@/interface/global'
 import { Document } from 'mongoose'
 
-interface IProjectImage {
-  mainImage: string[]
-  subImage: string[]
+type TProjectImage = {
+  avatar: Express.Multer.File[]
+  images: Express.Multer.File[]
 }
 
 interface IProject extends Document {
-  avatar?: string
+  avatar?: { publicId: string; url: string }
   name: string
   client: string
   description?: string
-  images?: IProjectImage[]
+  images?: { publicId: string; url: string }[]
+  layout: number[][]
+}
+
+type TCreateProject = IProject & {
+  avatar: string
+  images: string[]
 }
 
 interface IProjectPagination<T> extends TPagination<T> {
@@ -26,4 +32,11 @@ interface IUpdateProject extends Omit<IProject, 'Document'> {
   id: string
 }
 
-export { IProject, IProjectPagination, IUploadProjectImage, IUpdateProject }
+export {
+  IProject,
+  IProjectPagination,
+  IUploadProjectImage,
+  IUpdateProject,
+  TProjectImage,
+  TCreateProject
+}

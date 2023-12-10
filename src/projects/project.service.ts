@@ -4,18 +4,26 @@ import {
   IProjectPagination,
   IProject,
   IUploadProjectImage,
-  IUpdateProject
+  IUpdateProject,
+  TCreateProject
 } from './project.interface'
 import ProjectModel from './project.model'
 import uploadService from '@/files/file.service'
 
 const projectService = {
-  create: async (params: IProject) => {
+  create: async (params: TCreateProject) => {
     if (!Object.keys(params).length) throw createHttpError.NotFound()
 
     const { data: avatarUrl } = await uploadService.uploadImage(params.avatar)
+    const { data: imageList } = await uploadService.uploadMutipleImage(
+      params.images
+    )
 
-    const newProject = new ProjectModel({ ...params, avatar: avatarUrl?.url })
+    const newProject = new ProjectModel({
+      ...params,
+      avatar: avatarUrl,
+      images: imageList
+    })
 
     if (!newProject) throw createHttpError.BadRequest()
 
@@ -26,7 +34,9 @@ const projectService = {
     }
   },
   getOne: async (id: string) => {
-    const project = await ProjectModel.findById(id).lean()
+    const project = await ProjectModel.findById(id)
+      .lean()
+      .select('-images._id -avatar._id')
 
     if (!project || !id.trim()) {
       return { code: 404, message: errorMessage.notFound('Project') }
@@ -52,6 +62,7 @@ const projectService = {
       .limit(limit)
       .skip((page - 1) * limit)
       .sort({ [sortBy]: order })
+      .select('-images._id -avatar._id')
 
     const count = await x.countDocuments()
 
@@ -88,6 +99,29 @@ const projectService = {
       code: 200,
       message: 'Project has been updated',
       data: updatedProject
+    }
+  },
+  delete: async (projectId: string) => {
+    const project = await ProjectModel.findById({ _id: projectId })
+      .lean()
+      .select('images.publicId avatar.publicId')
+    const imagesIds = project?.images?.map(i => i.publicId) ?? []
+    const avatarId = project?.avatar?.publicId ?? ''
+    const publicIdList = imagesIds.concat(avatarId)
+
+    await uploadService.deleteMultiImages(publicIdList)
+    const deletedProject = await ProjectModel.deleteOne({ _id: projectId })
+
+    if (deletedProject) {
+      return {
+        code: 200,
+        message: `Project ${projectId} has been deleted`
+      }
+    }
+
+    return {
+      code: 400,
+      message: 'Can not delete this project'
     }
   }
 }

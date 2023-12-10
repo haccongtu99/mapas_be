@@ -3,6 +3,7 @@ import express from 'express'
 import { projectController } from './project.controller'
 import { uploadCloud } from '@/configs/cloudinary.config'
 import {
+  createImageValidation,
   createProjectValidation,
   updateProjectValidation
 } from './project.validation'
@@ -12,8 +13,9 @@ const router = express.Router()
 router.post(
   '/projects/create',
   verifyAccessToken,
-  uploadCloud.single('avatar'),
+  uploadCloud.fields([{ name: 'avatar', maxCount: 1 }, { name: 'images' }]),
   createProjectValidation,
+  createImageValidation,
   projectController.createProject
 )
 
@@ -24,17 +26,20 @@ router.get(
 )
 
 router.get('/projects', verifyAccessToken, projectController.getAllProjects)
-router.get(
-  '/projects/upload',
-  verifyAccessToken,
-  projectController.getAllProjects
-)
+
+router.get('/projects', verifyAccessToken, projectController.getAllProjects)
 
 router.patch(
   '/projects/update',
   verifyAccessToken,
   updateProjectValidation,
   projectController.updateProject
+)
+
+router.delete(
+  '/projects/:projectId',
+  verifyAccessToken,
+  projectController.deleteProject
 )
 
 export = router

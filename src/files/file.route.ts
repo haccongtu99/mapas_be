@@ -11,9 +11,11 @@ router.post(
 )
 
 router.post(
-  '/uploads',
+  '/upload',
   uploadCloud.array('images'),
   uploadController.uploadMultipleImage
 )
+
+router.post('/upload/delete', uploadController.deleteImages)
 
 export = router

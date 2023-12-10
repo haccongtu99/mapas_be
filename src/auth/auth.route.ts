@@ -18,6 +18,6 @@ router.post(
 router.post('/users/verify-otp', verifyOtpValidation, authController.verifyOtp)
 router.post('/users/login', loginValidation, authController.login)
 router.post('/users/refresh-token', authController.refreshToken)
-router.delete('/users/logout', authController.logout)
+router.post('/users/logout', authController.logout)
 
 export = router
