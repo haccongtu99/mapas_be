@@ -32,10 +32,11 @@ const projectSchema = {
     })
   }),
   updateProject: Joi.object({
-    id: Joi.string().required(),
+    id: Joi.string(),
     name: Joi.string().max(256),
     client: Joi.string().max(24),
-    description: Joi.string().max(256)
+    description: Joi.string().max(256),
+    layout: Joi.array().items(Joi.array().items(Joi.number().max(24)))
   })
 }
 

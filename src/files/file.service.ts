@@ -52,6 +52,19 @@ const uploadService = {
     }
   },
 
+  updateImage: async (oldImageId: string, newImagePath: string) => {
+    if (!oldImageId) {
+      await uploadService.deleteImage(oldImageId)
+    }
+    const { data } = await uploadService.uploadImage(newImagePath)
+
+    return {
+      code: 200,
+      data,
+      message: 'Image has been updated'
+    }
+  },
+
   deleteImage: async (fileId: string) => {
     if (!fileId) {
       return {

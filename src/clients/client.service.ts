@@ -1,7 +1,7 @@
 import { errorMessage } from '@/constants'
 import createHttpError from 'http-errors'
 import uploadService from '@/files/file.service'
-import { IClient, IClientPagination } from './client.interface'
+import { IClient, IClientPagination, IUpdateClient } from './client.interface'
 import ClientModel from './client.model'
 
 const clientService = {
@@ -70,35 +70,27 @@ const clientService = {
       totalPages: Math.ceil(count / limit),
       currentPage: Number(page)
     }
+  },
+  update: async (params: IUpdateClient) => {
+    const { id, ...otherParams } = params
+    const project = await ClientModel.findById(id)
+
+    if (!project || !id) {
+      throw createHttpError.NotFound('Projects not found')
+    }
+
+    const updatedProject = await ClientModel.findByIdAndUpdate(
+      id,
+      { ...otherParams },
+      { returnOriginal: false, new: true }
+    )
+
+    return {
+      code: 200,
+      message: 'Project has been updated',
+      data: updatedProject
+    }
   }
-  //   uploadImage: async ({ file }: IUploadProjectImage) => {
-  //     const { data } = await uploadService.uploadImage(file)
-
-  //     return {
-  //       data,
-  //       code: 200
-  //     }
-  //   },
-  //   update: async (params: IUpdateProject) => {
-  //     const { id, ...otherParams } = params
-  //     const project = await ProjectModel.findById(id)
-
-  //     if (!project || !id) {
-  //       throw createHttpError.NotFound('Projects not found')
-  //     }
-
-  //     const updatedProject = await ProjectModel.findByIdAndUpdate(
-  //       id,
-  //       { ...otherParams },
-  //       { returnOriginal: false, new: true }
-  //     )
-
-  //     return {
-  //       code: 200,
-  //       message: 'Project has been updated',
-  //       data: updatedProject
-  //     }
-  //   }
 }
 
 export default clientService

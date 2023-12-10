@@ -82,16 +82,21 @@ const projectService = {
     }
   },
   update: async (params: IUpdateProject) => {
-    const { id, ...otherParams } = params
+    const { id, avatar, images, ...otherParams } = params
     const project = await ProjectModel.findById(id)
 
     if (!project || !id) {
       throw createHttpError.NotFound('Projects not found')
     }
 
+    const { data } = await uploadService.updateImage(
+      project.avatar?.publicId ?? '',
+      avatar
+    )
+
     const updatedProject = await ProjectModel.findByIdAndUpdate(
       id,
-      { ...otherParams },
+      { ...otherParams, avatar: data ? { ...data } : undefined },
       { returnOriginal: false, new: true }
     )
 

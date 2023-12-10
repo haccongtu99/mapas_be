@@ -27,11 +27,10 @@ router.get(
 
 router.get('/projects', verifyAccessToken, projectController.getAllProjects)
 
-router.get('/projects', verifyAccessToken, projectController.getAllProjects)
-
 router.patch(
   '/projects/update',
   verifyAccessToken,
+  uploadCloud.fields([{ name: 'avatar', maxCount: 1 }, { name: 'images' }]),
   updateProjectValidation,
   projectController.updateProject
 )

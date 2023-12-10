@@ -28,8 +28,9 @@ interface IUploadProjectImage {
   file: string
 }
 
-interface IUpdateProject extends Omit<IProject, 'Document'> {
+interface IUpdateProject extends Omit<IProject, 'Document' | 'avatar'> {
   id: string
+  avatar: string
 }
 
 export {

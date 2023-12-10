@@ -48,21 +48,17 @@ export const projectController = {
       next(err)
     }
   },
-  uploadImage: async (req: IAuthRequest, res: Response, next: NextFunction) => {
-    try {
-      const { code, data } = await projectService.uploadImage(req.body)
-      return res.status(code).json({ data })
-    } catch (err) {
-      next(err)
-    }
-  },
   updateProject: async (
     req: IAuthRequest,
     res: Response,
     next: NextFunction
   ) => {
     try {
-      const { code, data, message } = await projectService.update(req.body)
+      const files = req.files as TProjectImage
+      const { code, data, message } = await projectService.update({
+        ...req.body,
+        avatar: files?.avatar[0]?.path
+      })
       return res.status(code).json({ data, message })
     } catch (err) {
       next(err)

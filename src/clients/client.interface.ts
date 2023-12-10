@@ -21,4 +21,8 @@ interface IClientPagination<T> extends TPagination<T> {
   name?: string
 }
 
-export { IClient, TClientImage, IClientPagination }
+interface IUpdateClient extends Omit<IClient, 'Document'> {
+  id: string
+}
+
+export { IClient, TClientImage, IClientPagination, IUpdateClient }
