@@ -8,16 +8,21 @@ const router = express.Router()
 
 router.post(
   '/clients/create',
-  createClientValidation,
   verifyAccessToken,
   uploadCloud.fields([
     { name: 'thumb', maxCount: 1 },
     { name: 'colorThumb', maxCount: 1 }
   ]),
+  createClientValidation,
   clientController.createClient
 )
 
 router.get('/clients', verifyAccessToken, clientController.getAllClients)
 router.get('/clients/:id', verifyAccessToken, clientController.getClientDetails)
+router.delete(
+  '/clients/:clientId',
+  verifyAccessToken,
+  clientController.deleteProject
+)
 
 export = router

@@ -1,11 +1,16 @@
 import { errorMessage } from '@/constants'
 import createHttpError from 'http-errors'
 import uploadService from '@/files/file.service'
-import { IClient, IClientPagination, IUpdateClient } from './client.interface'
+import {
+  IClient,
+  IClientPagination,
+  IUpdateClient,
+  TCreateClient
+} from './client.interface'
 import ClientModel from './client.model'
 
 const clientService = {
-  create: async (params: IClient) => {
+  create: async (params: TCreateClient) => {
     if (!Object.keys(params).length) throw createHttpError.NotFound()
 
     const clients = await ClientModel.findOne({ name: params.name })
@@ -20,8 +25,8 @@ const clientService = {
 
     const newClient = new ClientModel({
       ...params,
-      thumb: thumb?.url ?? '',
-      colorThumb: colorThumb?.url ?? ''
+      thumb,
+      colorThumb
     })
 
     if (!newClient) throw createHttpError.BadRequest()
@@ -76,7 +81,7 @@ const clientService = {
     const project = await ClientModel.findById(id)
 
     if (!project || !id) {
-      throw createHttpError.NotFound('Projects not found')
+      throw createHttpError.NotFound('Client not found')
     }
 
     const updatedProject = await ClientModel.findByIdAndUpdate(
@@ -87,8 +92,39 @@ const clientService = {
 
     return {
       code: 200,
-      message: 'Project has been updated',
+      message: 'Client has been updated',
       data: updatedProject
+    }
+  },
+  delete: async (clientId: string) => {
+    const client = await ClientModel.findById({ _id: clientId })
+      .lean()
+      .select('thumb.publicId colorThumb.publicId')
+
+    if (!client) {
+      return {
+        code: 404,
+        message: 'Client not found'
+      }
+    }
+
+    const thumbId = client?.thumb?.publicId ?? ''
+    const thumbColorId = client?.colorThumb?.publicId ?? ''
+    const publicIdList = [thumbId, thumbColorId]
+
+    await uploadService.deleteMultiImages(publicIdList)
+    const deletedClient = await ClientModel.deleteOne({ _id: clientId })
+
+    if (deletedClient) {
+      return {
+        code: 200,
+        message: `Client ${clientId} has been deleted`
+      }
+    }
+
+    return {
+      code: 400,
+      message: 'Can not delete this client'
     }
   }
 }

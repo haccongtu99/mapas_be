@@ -7,14 +7,19 @@ type TClientImage = {
 }
 
 interface IClient extends Document {
-  thumb?: string
-  colorThumb?: string
+  thumb?: { publicId: string; url: string }
+  colorThumb?: { publicId: string; url: string }
   name: string
   client: string
   country?: string
   contact?: string
   email?: string
   link?: string
+}
+
+type TCreateClient = IClient & {
+  thumb?: string
+  colorThumb?: string
 }
 
 interface IClientPagination<T> extends TPagination<T> {
@@ -25,4 +30,10 @@ interface IUpdateClient extends Omit<IClient, 'Document'> {
   id: string
 }
 
-export { IClient, TClientImage, IClientPagination, IUpdateClient }
+export {
+  IClient,
+  TClientImage,
+  IClientPagination,
+  IUpdateClient,
+  TCreateClient
+}

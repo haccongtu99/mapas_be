@@ -11,7 +11,6 @@ export const clientController = {
   ) => {
     try {
       const files = req.files as TClientImage
-      console.log(files)
       const { code, client } = await clientService.create({
         ...req.body,
         thumb: files?.thumb?.[0]?.path ?? '',
@@ -44,6 +43,19 @@ export const clientController = {
       const { code, clients, totalPages, currentPage } =
         await clientService.getAll(req.query)
       return res.status(code).json({ data: clients, totalPages, currentPage })
+    } catch (err) {
+      next(err)
+    }
+  },
+  deleteProject: async (
+    req: IAuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { clientId } = req.params
+      const { code, message } = await clientService.delete(clientId)
+      return res.status(code).json({ message })
     } catch (err) {
       next(err)
     }

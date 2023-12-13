@@ -3,11 +3,10 @@ import { IClient } from './client.interface'
 
 const ClientsSchema = new Schema<IClient>(
   {
-    thumb: {
-      type: String
-    },
+    thumb: { url: { type: String, trim: true }, publicId: { type: String } },
     colorThumb: {
-      type: String
+      url: { type: String, trim: true },
+      publicId: { type: String }
     },
     name: {
       type: String,
