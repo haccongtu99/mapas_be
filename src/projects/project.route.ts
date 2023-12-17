@@ -11,7 +11,7 @@ import {
 const router = express.Router()
 
 router.post(
-  '/projects/create',
+  '/admin/projects/create',
   verifyAccessToken,
   uploadCloud.fields([{ name: 'avatar', maxCount: 1 }, { name: 'images' }]),
   createProjectValidation,
@@ -19,16 +19,24 @@ router.post(
   projectController.createProject
 )
 
+router.get('/projects/:id', projectController.getProjectDetails)
+
+router.get('/projects', projectController.getAllProjects)
+
 router.get(
-  '/projects/:id',
+  '/admin/projects/:id',
   verifyAccessToken,
   projectController.getProjectDetails
 )
 
-router.get('/projects', verifyAccessToken, projectController.getAllProjects)
+router.get(
+  '/admin/projects',
+  verifyAccessToken,
+  projectController.getAllProjects
+)
 
 router.patch(
-  '/projects/update',
+  '/admin/projects/update',
   verifyAccessToken,
   uploadCloud.fields([{ name: 'avatar', maxCount: 1 }, { name: 'images' }]),
   updateProjectValidation,
@@ -36,7 +44,7 @@ router.patch(
 )
 
 router.delete(
-  '/projects/:projectId',
+  '/admin/projects/:projectId',
   verifyAccessToken,
   projectController.deleteProject
 )

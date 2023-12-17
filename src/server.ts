@@ -5,7 +5,7 @@ import productRouter from '@/products/product.route'
 import userRouter from '@/users/user.route'
 import projectRouter from '@/projects/project.route'
 import clientRouter from '@/clients/client.route'
-import cors from 'cors'
+import cors, { CorsOptions } from 'cors'
 import dotenv from 'dotenv'
 import express, { Application } from 'express'
 import helmet from 'helmet'
@@ -13,6 +13,7 @@ import morgan from 'morgan'
 import { startServer } from './configs/db.config'
 import { errorHandlerMiddleware } from './middlewares/errors/errorHandlers'
 import { notFoundMiddleware } from './middlewares/errors/notFound'
+import { enviromentConfig } from './configs/env.config'
 
 // Access environment variables
 dotenv.config()
@@ -22,7 +23,13 @@ const app: Application = express()
 
 // Load App Middleware
 app.use(helmet())
-app.use(cors())
+app.use(
+  cors({
+    origin: enviromentConfig.WHITE_LIST, // Replace with your client application's origin
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true // Enable credentials (cookies, authorization headers) for cross-origin requests
+  })
+)
 app.use(morgan('common'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
