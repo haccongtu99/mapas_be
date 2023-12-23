@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { IProject } from './project.interface'
+import { EProjectCategory, IProject } from './project.interface'
 
 const ProjectSchema = new Schema(
   {
@@ -19,6 +19,10 @@ const ProjectSchema = new Schema(
     link: {
       type: String,
       default: ''
+    },
+    category: {
+      type: String,
+      default: EProjectCategory.NONE
     },
     images: [{ url: { type: String }, publicId: { type: String } }],
     layout: [[{ type: Number, default: undefined }]]

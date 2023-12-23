@@ -6,12 +6,23 @@ type TProjectImage = {
   images: Express.Multer.File[]
 }
 
+enum EProjectCategory {
+  BRAND_IDENTITY = 'brand-identity',
+  LAYOUT_BOOK = 'layout-book',
+  WEBSITE_APP = 'website-app',
+  PACKAGING = 'packaging',
+  ADVERTISING = 'advertising',
+  PHOTOGRAPHY = 'photography',
+  NONE = 'none'
+}
+
 interface IProject extends Document {
   avatar?: { publicId: string; url: string }
   name: string
   client: string
   description?: string
   link?: string
+  category?: string
   images?: { publicId: string; url: string }[]
   layout: number[][]
 }
@@ -23,6 +34,7 @@ type TCreateProject = IProject & {
 
 interface IProjectPagination<T> extends TPagination<T> {
   name?: string
+  category?: string
 }
 
 interface IUploadProjectImage {
@@ -40,5 +52,6 @@ export {
   IUploadProjectImage,
   IUpdateProject,
   TProjectImage,
-  TCreateProject
+  TCreateProject,
+  EProjectCategory
 }

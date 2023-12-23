@@ -1,4 +1,5 @@
 import Joi from 'joi'
+import { EProjectCategory } from './project.interface'
 
 const projectSchema = {
   createProject: Joi.object({
@@ -6,6 +7,10 @@ const projectSchema = {
     client: Joi.string().max(24).required(),
     description: Joi.string(),
     link: Joi.string().trim().max(256),
+    category: Joi.string()
+      .lowercase()
+      .valid(...Object.values(EProjectCategory))
+      .trim(),
     layout: Joi.array().items(Joi.array().items(Joi.number().max(24)))
   }),
   createImage: Joi.object({

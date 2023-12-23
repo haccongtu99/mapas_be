@@ -41,9 +41,11 @@ export const projectController = {
     next: NextFunction
   ) => {
     try {
-      const { code, projects, totalPages, currentPage } =
+      const { code, projects, totalPages, currentPage, total } =
         await projectService.getAll(req.query)
-      return res.status(code).json({ data: projects, totalPages, currentPage })
+      return res
+        .status(code)
+        .json({ data: projects, totalPages, currentPage, total })
     } catch (err) {
       next(err)
     }

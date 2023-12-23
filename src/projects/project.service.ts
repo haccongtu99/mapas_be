@@ -1,14 +1,14 @@
 import { errorMessage } from '@/constants'
+import uploadService from '@/files/file.service'
 import createHttpError from 'http-errors'
 import {
-  IProjectPagination,
   IProject,
-  IUploadProjectImage,
+  IProjectPagination,
   IUpdateProject,
+  IUploadProjectImage,
   TCreateProject
 } from './project.interface'
 import ProjectModel from './project.model'
-import uploadService from '@/files/file.service'
 
 const projectService = {
   create: async (params: TCreateProject) => {
@@ -51,10 +51,18 @@ const projectService = {
     page = 1,
     order = 1,
     sortBy = 'name',
-    keyword = ''
+    keyword = '',
+    category
   }: IProjectPagination<IProject>) => {
+    const queryParams = []
+    queryParams.push({ name: { $regex: keyword, $options: 'i' } })
+
+    if (category) {
+      queryParams.push({ category: category })
+    }
+
     const query = ProjectModel.find({
-      name: { $regex: keyword, $options: 'i' }
+      $and: queryParams
     })
     const x = query.clone()
 
@@ -69,6 +77,7 @@ const projectService = {
     return {
       projects,
       code: 200,
+      total: count,
       totalPages: Math.ceil(count / limit),
       currentPage: Number(page)
     }
