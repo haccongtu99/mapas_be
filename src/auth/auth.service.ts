@@ -135,6 +135,10 @@ const authService = {
       { expiresIn: '1y' }
     )
 
+    await client.set(userId, newRefreshToken.toString(), {
+      EX: 365 * 24 * 60 * 60
+    })
+
     return { accessToken, newRefreshToken, code: 200 }
   }
 }

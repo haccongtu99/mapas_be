@@ -5,6 +5,7 @@ const projectSchema = {
     name: Joi.string().max(256).required(),
     client: Joi.string().max(24).required(),
     description: Joi.string(),
+    link: Joi.string().trim().max(256),
     layout: Joi.array().items(Joi.array().items(Joi.number().max(24)))
   }),
   createImage: Joi.object({
@@ -35,6 +36,7 @@ const projectSchema = {
     id: Joi.string(),
     name: Joi.string().max(256),
     client: Joi.string().max(24),
+    link: Joi.string().trim().max(256),
     description: Joi.string(),
     layout: Joi.array().items(Joi.array().items(Joi.number().max(24)))
   })

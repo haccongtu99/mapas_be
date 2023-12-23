@@ -16,6 +16,10 @@ const ProjectSchema = new Schema(
       type: String,
       required: true
     },
+    link: {
+      type: String,
+      default: ''
+    },
     images: [{ url: { type: String }, publicId: { type: String } }],
     layout: [[{ type: Number, default: undefined }]]
   },

@@ -11,6 +11,7 @@ interface IProject extends Document {
   name: string
   client: string
   description?: string
+  link?: string
   images?: { publicId: string; url: string }[]
   layout: number[][]
 }
